@@ -1,1 +1,3 @@
-"# ArtemDenisov" 
+инструкция для fit
+
+инструкция для predict
