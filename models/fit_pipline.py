@@ -44,7 +44,7 @@ def fit_model(X_train: pd.DataFrame,
         model = KNeighborsClassifier(n_neighbors=3)
     model.fit(X_train, y_train)
     logging.info('model was fitted')
-    with open(f'{path_to_artifacts}\\model.pkl', 'wb') as pkl_file:
+    with open(f'{path_to_artifacts}/model.pkl', 'wb') as pkl_file:
         pickle.dump(model, pkl_file)
         logger.info('model config was saved')
     return model

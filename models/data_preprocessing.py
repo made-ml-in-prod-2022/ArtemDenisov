@@ -44,10 +44,10 @@ def split_data(X: pd.DataFrame,
                                                         y,
                                                         test_size=test_size,
                                                         random_state=RANDOM_STATE)
-    X_train.to_csv(f'{path_to_artifacts}\\x_train.csv', index=False)
-    X_test.to_csv(f'{path_to_artifacts}\\x_test.csv', index=False)
-    y_train.to_csv(f'{path_to_artifacts}\\y_train.csv', index=False)
-    y_test.to_csv(f'{path_to_artifacts}\\y_test.csv', index=False)
+    X_train.to_csv(f'{path_to_artifacts}/x_train.csv', index=False)
+    X_test.to_csv(f'{path_to_artifacts}/x_test.csv', index=False)
+    y_train.to_csv(f'{path_to_artifacts}/y_train.csv', index=False)
+    y_test.to_csv(f'{path_to_artifacts}/y_test.csv', index=False)
     return X_train, X_test, y_train, y_test
 
 
