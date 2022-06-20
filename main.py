@@ -86,25 +86,27 @@ PREDICT = False
 PATH_TO_DATA = 'heart_cleveland_upload_original.csv'
 
 if __name__ == "__main__":
-    """main function of the library, calls all the functions and class methods"""
-    logging.basicConfig(level=logging.INFO)
-    parser = ArgumentParser(
-        prog='ml in prod homework 02',
-        description="CLI for data classification",
-        formatter_class=ArgumentDefaultsHelpFormatter,
-    )
-    setup_parser(parser)
-    arguments = parser.parse_args()
-    arguments.callback(arguments)
+    # """main function of the library, calls all the functions and class methods"""
+    # logging.basicConfig(level=logging.INFO)
+    # parser = ArgumentParser(
+    #     prog='ml in prod homework 02',
+    #     description="CLI for data classification",
+    #     formatter_class=ArgumentDefaultsHelpFormatter,
+    # )
+    # setup_parser(parser)
+    # arguments = parser.parse_args()
+    # arguments.callback(arguments)
 
-    # data = open_file(PATH_TO_DATA)
-    # X = data[data.columns[:-1]]
-    # y = data['condition']
+    data = open_file(PATH_TO_DATA)
+    X = data[data.columns[:-1]]
+    y = data['condition']
+    for column in data.columns:
+        print(column, data[column].min(), data[column].max(), data[column].unique())
     # configuration = dict()
     # configuration['test_size'] = 0.3
     # X_train, X_test, y_train, y_test = split_data(X, y,
-                                                  configuration=configuration,
-                                                  path_to_artifacts='artifacts')
+    #                                               configuration=configuration,
+    #                                               path_to_artifacts='artifacts')
     # функция фит - берет трейн и обучает модель, складывает модель в пикл
     # model = DecisionTreeClassifier()
     # fitted_model = fit_model(X_train, y_train, path_to_artifacts='artifacts', model=model)
