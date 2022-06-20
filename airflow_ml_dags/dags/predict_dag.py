@@ -3,6 +3,7 @@ from datetime import timedelta
 
 from airflow import DAG
 from airflow.providers.docker.operators.docker import DockerOperator
+from airflow.models import Variable
 from airflow.utils import timezone
 from docker.types import Mount
 from airflow.sensors.filesystem import FileSensor
@@ -13,6 +14,8 @@ default_args = {
     "retries": 1,
     "retry_delay": timedelta(minutes=5),
 }
+
+MODEL_PATH = Variable.get("MODEL_PATH")
 
 
 def days_ago(n: int):
@@ -27,25 +30,32 @@ with DAG(
         start_date=days_ago(5),
 ) as dag:
 
-    check_model = FileSensor(
-        task_id="Check_classification_model",
-        poke_interval=10,
-        retries=10,
-        filepath="/models/{{ ds }}/classification_model.pkl"
-    )
+    # check_model = FileSensor(
+    #     task_id="check_classification_model",
+    #     poke_interval=10,
+    #     retries=10,
+    #     filepath=MODEL_PATH + "/classification_model.pkl"
+    # )
+    #
+    # check_scaler = FileSensor(
+    #     task_id="check_scaler_model",
+    #     poke_interval=10,
+    #     retries=10,
+    #     filepath=MODEL_PATH + "/scaler.pkl"
+    # )
 
-    check_scaler = FileSensor(
-        task_id="Check_scaler_model",
-        poke_interval=10,
-        retries=10,
-        filepath="/models/{{ ds }}/scaler.pkl"
-    )
+    # check_features = FileSensor(
+    #     task_id="check_features_file",
+    #     poke_interval=10,
+    #     retries=10,
+    #     filepath="/data/processed/{{ ds }}/X_test.csv"
+    # )
 
     predict = DockerOperator(
         image="airflow-predict",
-        command="--data-path /data/processed/{{ ds }} --model-path /models",
+        command="--data-path /data/processed/{{ ds }} --prediction-path /data/predictions/{{ ds }} --model-path " + MODEL_PATH,
         network_mode="bridge",
-        task_id="docker-airflow-predict",
+        task_id="predict",
         do_xcom_push=False,
         mount_tmp_dir=False,
         # !!! HOST folder(NOT IN CONTAINER) replace with yours !!!
@@ -58,4 +68,5 @@ with DAG(
                 ]
     )
 
-    check_model >> check_scaler >> predict
+    # check_model >> check_scaler >> check_features >> predict
+    predict

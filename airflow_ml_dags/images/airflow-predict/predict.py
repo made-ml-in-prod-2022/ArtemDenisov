@@ -14,7 +14,7 @@ MODEL_FILE = 'classification_model.pkl'
 X_VAL_FILE = 'X_test.csv'
 Y_VAL_FILE = 'y_test.csv'
 
-PREDICTION_FILE = 'prediction.csv'
+PREDICTION_FILE = 'predictions.csv'
 ACCURACY_FILE = 'test_accuracy.txt'
 
 
@@ -53,7 +53,9 @@ def predict(features: pd.DataFrame,
             model: sklearn.base.BaseEstimator,
             prediction_path: str) -> pd.DataFrame:
     prediction = model.predict(features)
-    prediction.to_csv(os.path.join(prediction_path, PREDICTION_FILE))
+    df_prediction = pd.DataFrame(prediction, columns=['prediction'])
+    os.makedirs(prediction_path, exist_ok=True)
+    df_prediction.to_csv(os.path.join(prediction_path, PREDICTION_FILE), index=False)
     return prediction
 
 

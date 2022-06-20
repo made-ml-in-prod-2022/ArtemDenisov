@@ -1,5 +1,5 @@
 FROM airflow-ml-base:latest
 
-COPY validate.py /validate.py
+COPY transform.py /transform.py
 
-ENTRYPOINT ["python", "validate.py"]
+ENTRYPOINT ["python", "transform.py"]

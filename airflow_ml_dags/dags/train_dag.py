@@ -1,9 +1,9 @@
-import os
 from datetime import timedelta
 
 from airflow import DAG
 from airflow.providers.docker.operators.docker import DockerOperator
 from airflow.utils import timezone
+from airflow.models import Variable
 from docker.types import Mount
 
 
@@ -11,6 +11,8 @@ def days_ago(n: int):
     today = timezone.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
     return today - timedelta(days=n)
 
+
+MODEL_PATH = Variable.get("MODEL_PATH")
 
 default_args = {
     "owner": "airflow",
@@ -29,7 +31,7 @@ with DAG(
         image="airflow-download",
         command="--raw /data/raw/{{ ds }} --processed /data/processed/{{ ds }}",
         network_mode="bridge",
-        task_id="docker-airflow-download",
+        task_id="download",
         do_xcom_push=False,
         mount_tmp_dir=False,
         # !!! HOST folder(NOT IN CONTAINER) replace with yours !!!
@@ -57,7 +59,7 @@ with DAG(
 
     transform = DockerOperator(
         image="airflow-transform",
-        command="--data-path /data/processed/{{ ds }} --models-path /models",
+        command="--data-path /data/processed/{{ ds }} --model-path " + MODEL_PATH,
         network_mode="bridge",
         task_id="transform",
         do_xcom_push=False,
@@ -66,17 +68,14 @@ with DAG(
         mounts=[Mount(source="/Users/user/PycharmProjects/homework02/ArtemDenisov/airflow_ml_dags/data/",
                       target="/data",
                       type='bind'),
-                Mount(source="/Users/user/PycharmProjects/homework02/ArtemDenisov/airflow_ml_dags/models/",
-                      target="/models",
-                      type='bind'),
                 ]
     )
 
     train = DockerOperator(
         image="airflow-train",
-        command="--data-path /data/processed/{{ ds }} --models-path /models",
+        command="--data-path /data/processed/{{ ds }} --model-path " + MODEL_PATH,
         network_mode="bridge",
-        task_id="docker-airflow-train",
+        task_id="train",
         do_xcom_push=False,
         mount_tmp_dir=False,
         # !!! HOST folder(NOT IN CONTAINER) replace with yours !!!
@@ -89,11 +88,18 @@ with DAG(
                 ]
     )
 
+    # check_model = FileSensor(
+    #     task_id="check_classification_model",
+    #     poke_interval=10,
+    #     retries=10,
+    #     filepath=MODEL_PATH + "/classification_model.pkl"
+    # )
+
     validate = DockerOperator(
         image="airflow-validate",
-        command="--data-path /data/processed/{{ ds }} --models-path /models",
+        command="--data-path /data/processed/{{ ds }} --model-path " + MODEL_PATH,
         network_mode="bridge",
-        task_id="docker-airflow-validate",
+        task_id="validate",
         do_xcom_push=False,
         mount_tmp_dir=False,
         # !!! HOST folder(NOT IN CONTAINER) replace with yours !!!
