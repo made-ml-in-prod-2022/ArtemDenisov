@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: online-inference-replicaset
+  labels:
+    app: online-inference-replicaset
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: online-inference-replicaset
+  template:
+    metadata:
+      name: online-inference-replicaset
+      labels:
+        app: online-inference-replicaset
+    spec:
+      containers:
+        - image: sibarin/online-inference:v2
+          name: online-inference
+          ports:
+            - containerPort: 8000
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "400m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"

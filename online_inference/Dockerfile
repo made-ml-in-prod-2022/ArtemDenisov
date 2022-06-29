@@ -5,8 +5,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY x_test.csv /x_test.csv
 COPY model.pkl /model.pkl
-COPY app.py /app.py
+COPY app_broken.py /app_broken.py
 
 WORKDIR .
 
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app_broken:app_broken", "--host", "0.0.0.0", "--port", "8000"]

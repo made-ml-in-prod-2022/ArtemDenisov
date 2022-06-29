@@ -1,0 +1,26 @@
+apiVersion: v2
+kind: Pod
+metadata:
+  name: online-inference-probes
+  labels:
+    app: online-inference
+spec:
+  containers:
+    - image: sibarin/online-inference:v2
+      name: online-inference
+      ports:
+        - containerPort: 8000
+      readinessProbe:
+        httpGet:
+          path: /health
+          port: 8000
+        initialDelaySeconds: 20
+        periodSeconds: 10
+        failureThreshold: 10
+      livenessProbe:
+        httpGet:
+          path: /health
+          port: 8000
+        initialDelaySeconds: 60
+        periodSeconds: 15
+        failureThreshold: 10
