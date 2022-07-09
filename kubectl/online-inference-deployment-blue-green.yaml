@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: online-inference-deployment
+  labels:
+    app: online-inference-deployment
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 4
+  selector:
+    matchLabels:
+      app: online-inference-deployment
+  template:
+    metadata:
+      name: online-inference-deployment
+      labels:
+        app: online-inference-deployment
+    spec:
+      containers:
+        - image: sibarin/online-inference:v2
+          name: online-inference
+          ports:
+            - containerPort: 8000

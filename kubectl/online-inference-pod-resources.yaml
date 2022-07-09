@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: online-inference-resources
+spec:
+  containers:
+    - image: sibarin/online-inference:v2
+      name: online-inference-recources
+      ports:
+        - containerPort: 8000
+      resources:
+        requests:
+          memory: "64Mi"
+          cpu: "500m"
+        limits:
+          memory: "512Mi"
+          cpu: "500m"
