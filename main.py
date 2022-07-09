@@ -97,19 +97,19 @@ if __name__ == "__main__":
     arguments = parser.parse_args()
     arguments.callback(arguments)
 
-    data = open_file(PATH_TO_DATA)
-    X = data[data.columns[:-1]]
-    y = data['condition']
-    configuration = dict()
-    configuration['test_size'] = 0.3
-    X_train, X_test, y_train, y_test = split_data(X, y,
+    # data = open_file(PATH_TO_DATA)
+    # X = data[data.columns[:-1]]
+    # y = data['condition']
+    # configuration = dict()
+    # configuration['test_size'] = 0.3
+    # X_train, X_test, y_train, y_test = split_data(X, y,
                                                   configuration=configuration,
                                                   path_to_artifacts='artifacts')
     # функция фит - берет трейн и обучает модель, складывает модель в пикл
-    model = KNeighborsClassifier(n_neighbors=3)
-    fitted_model = fit_model(X_train, y_train, path_to_artifacts='artifacts', model=model)
-    model, X_test = load_model('artifacts/model.pkl', 'artifacts/X_test.csv')
-    y_test = predict(model, X_test)
+    # model = DecisionTreeClassifier()
+    # fitted_model = fit_model(X_train, y_train, path_to_artifacts='artifacts', model=model)
+    # model, X_test = load_model('artifacts/model.pkl', 'artifacts/X_test.csv')
+    # y_test = predict(model, X_test)
 # функция предикт - тест и пикл модели и дает результат
 # логи
 # тесты
